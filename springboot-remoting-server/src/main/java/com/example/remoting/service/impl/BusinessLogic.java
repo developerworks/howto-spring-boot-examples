@@ -1,4 +1,4 @@
-package com.example.demospringintegration.service.impl;
+package com.example.remoting.service.impl;
 
 import org.springframework.stereotype.Service;
 

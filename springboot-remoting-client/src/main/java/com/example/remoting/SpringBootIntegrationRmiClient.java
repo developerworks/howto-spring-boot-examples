@@ -1,30 +1,37 @@
-package com.example.demormiclienttest;
+package com.example.remoting;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
 @SpringBootApplication
 @Slf4j
 public class SpringBootIntegrationRmiClient implements CommandLineRunner {
 
     @Autowired
-    RmiDnsService rmiDnsService;
+    @Qualifier(value = "RmiDnsService")
+    DnsService rmiDnsService;
+
     @Autowired
-    HessianDnsService hessianDnsService;
+    @Qualifier(value = "HessianDnsService")
+    DnsService hessianDnsService;
+
+    @Autowired
+    @Qualifier(value = "HttpInvokerDnsService")
+    DnsService httpInvokerDnsService;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringBootIntegrationRmiClient.class);
     }
 
-
     @Override
     public void run(String... args) throws Exception {
-        log.info("[RMI    ] DNS解析结果: {}", rmiDnsService.getName(""));
-        log.info("[Hessian] DNS解析结果: {}", hessianDnsService.getName(""));
+        log.info("[RMI         ] DNS解析结果: {}", rmiDnsService.getName(""));
+        log.info("[Hessian     ] DNS解析结果: {}", hessianDnsService.getName(""));
+        log.info("[HTTP Invoker] DNS解析结果: {}", httpInvokerDnsService.getName(""));
     }
 
 }

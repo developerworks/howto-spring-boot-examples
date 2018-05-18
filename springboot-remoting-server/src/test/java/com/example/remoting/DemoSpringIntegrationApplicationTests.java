@@ -1,4 +1,4 @@
-package com.example.demospringintegration;
+package com.example.remoting;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
