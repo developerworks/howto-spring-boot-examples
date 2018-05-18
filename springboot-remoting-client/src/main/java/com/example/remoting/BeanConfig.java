@@ -4,8 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
-import org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter;
+import org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @Configuration
 public class BeanConfig {
@@ -32,4 +35,17 @@ public class BeanConfig {
         factoryBean.setServiceUrl("http://127.0.0.1:9090/HttpInvokerDnsService");
         return factoryBean;
     }
+
+//    @Bean(name = "JaxWsDnsService")
+//    JaxWsPortProxyFactoryBean jaxWsDnsService() throws MalformedURLException {
+//        JaxWsPortProxyFactoryBean factoryBean = new JaxWsPortProxyFactoryBean();
+//        factoryBean.setWsdlDocumentUrl(new URL("http://localhost:22222/services/WsDnsService?wsdl"));
+//        factoryBean.setServiceName("WsDnsService");
+//        factoryBean.setPortName("DnsServiceWsImplPort");
+//        factoryBean.setServiceInterface(DnsService.class);
+//        factoryBean.setNamespaceUri("http://impl.service.remoting.example.com/");
+//
+//        return factoryBean;
+//    }
+
 }

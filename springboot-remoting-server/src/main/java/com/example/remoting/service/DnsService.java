@@ -1,6 +1,9 @@
 package com.example.remoting.service;
 
-public interface DnsService {
+import javax.jws.WebMethod;
+import javax.jws.WebService;
 
+@WebService
+public interface DnsService {
     String getName(String ip);
 }

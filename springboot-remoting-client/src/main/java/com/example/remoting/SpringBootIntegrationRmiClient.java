@@ -23,6 +23,10 @@ public class SpringBootIntegrationRmiClient implements CommandLineRunner {
     @Qualifier(value = "HttpInvokerDnsService")
     DnsService httpInvokerDnsService;
 
+//    @Autowired
+//    @Qualifier(value = "JaxWsDnsService")
+//    DnsService jaxWsDnsService;
+
     public static void main(String[] args) {
         SpringApplication.run(SpringBootIntegrationRmiClient.class);
     }
@@ -32,6 +36,7 @@ public class SpringBootIntegrationRmiClient implements CommandLineRunner {
         log.info("[RMI         ] DNS解析结果: {}", rmiDnsService.getName(""));
         log.info("[Hessian     ] DNS解析结果: {}", hessianDnsService.getName(""));
         log.info("[HTTP Invoker] DNS解析结果: {}", httpInvokerDnsService.getName(""));
+//        log.info("[JAX-WS      ] DNS解析结果: {}", jaxWsDnsService.getName(""));
     }
 
 }
