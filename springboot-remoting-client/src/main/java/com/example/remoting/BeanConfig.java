@@ -36,16 +36,16 @@ public class BeanConfig {
         return factoryBean;
     }
 
-//    @Bean(name = "JaxWsDnsService")
-//    JaxWsPortProxyFactoryBean jaxWsDnsService() throws MalformedURLException {
-//        JaxWsPortProxyFactoryBean factoryBean = new JaxWsPortProxyFactoryBean();
-//        factoryBean.setWsdlDocumentUrl(new URL("http://localhost:22222/services/WsDnsService?wsdl"));
-//        factoryBean.setServiceName("WsDnsService");
-//        factoryBean.setPortName("DnsServiceWsImplPort");
-//        factoryBean.setServiceInterface(DnsService.class);
-//        factoryBean.setNamespaceUri("http://impl.service.remoting.example.com/");
-//
-//        return factoryBean;
-//    }
+    @Bean(name = "JaxWsDnsService")
+    JaxWsPortProxyFactoryBean jaxWsDnsService() throws MalformedURLException {
+        JaxWsPortProxyFactoryBean factoryBean = new JaxWsPortProxyFactoryBean();
+        factoryBean.setWsdlDocumentUrl(new URL("http://localhost:9091/jaxws/WsDnsService?wsdl"));
+        factoryBean.setServiceName("WsDnsService");
+        factoryBean.setPortName("DnsServiceWsImplPort");
+        factoryBean.setServiceInterface(DnsService.class);
+        factoryBean.setNamespaceUri("http://www.example.com/");
+
+        return factoryBean;
+    }
 
 }
