@@ -52,7 +52,7 @@ public class JmsServerConfig {
     }
 
     @Bean
-    SimpleMessageListenerContainer simpleMessageListenerContainer(ConnectionFactory connectionFactory, JmsInvokerServiceExporter exporter) {
+    SimpleMessageListenerContainer jmsListenerContainer(ConnectionFactory connectionFactory, JmsInvokerServiceExporter exporter) {
 
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);

@@ -13,24 +13,28 @@ import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 public class SpringBootRemotingClient implements CommandLineRunner {
 
     @Autowired
-    @Qualifier(value = "RmiDnsService")
-    DnsService rmiDnsService;
+    @Qualifier(value = "Rmi")
+    DnsService rmi;
 
     @Autowired
-    @Qualifier(value = "HessianDnsService")
-    DnsService hessianDnsService;
+    @Qualifier(value = "Hessian")
+    DnsService hessian;
 
     @Autowired
-    @Qualifier(value = "HttpInvokerDnsService")
-    DnsService httpInvokerDnsService;
+    @Qualifier(value = "HttpInvoker")
+    DnsService httpInvoker;
 
     @Autowired
-    @Qualifier(value = "JaxWsDnsService")
-    DnsService jaxWsDnsService;
+    @Qualifier(value = "JaxWs")
+    DnsService jaxWs;
 
     @Autowired
-    @Qualifier(value = "JmsDnsService")
-    DnsService jmsDnsService;
+    @Qualifier(value = "jmsInvoker")
+    DnsService jmsInvoker;
+
+    @Autowired
+    @Qualifier(value = "Amqp")
+    DnsService amqp;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringBootRemotingClient.class);
@@ -38,11 +42,12 @@ public class SpringBootRemotingClient implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("[RMI         ] DNS解析结果: {}", rmiDnsService.getName(""));
-        log.info("[Hessian     ] DNS解析结果: {}", hessianDnsService.getName(""));
-        log.info("[HTTP Invoker] DNS解析结果: {}", httpInvokerDnsService.getName(""));
-        log.info("[JAX-WS      ] DNS解析结果: {}", jaxWsDnsService.getName(""));
-        log.info("[JMS         ] DNS解析结果: {}", jmsDnsService.getName(""));
+        log.info("[RMI         ] DNS Result: {}", rmi.getName(""));
+        log.info("[Hessian     ] DNS Result: {}", hessian.getName(""));
+        log.info("[HTTP Invoker] DNS Result: {}", httpInvoker.getName(""));
+        log.info("[JAX-WS      ] DNS Result: {}", jaxWs.getName(""));
+        log.info("[JMS         ] DNS Result: {}", jmsInvoker.getName(""));
+        log.info("[AMQP        ] DNS Result: {}", amqp.getName(""));
     }
 
 }
