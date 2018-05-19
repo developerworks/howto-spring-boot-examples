@@ -7,9 +7,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @SpringBootApplication(exclude = {JmsAutoConfiguration.class})
 @Slf4j
+@EnableScheduling
 public class SpringBootRemotingClient implements CommandLineRunner {
 
     @Autowired
@@ -40,14 +43,19 @@ public class SpringBootRemotingClient implements CommandLineRunner {
         SpringApplication.run(SpringBootRemotingClient.class);
     }
 
-    @Override
-    public void run(String... args) throws Exception {
+    @Scheduled(fixedRate = 5000L)
+    public void query() {
         log.info("[RMI         ] DNS Result: {}", rmi.getName(""));
         log.info("[Hessian     ] DNS Result: {}", hessian.getName(""));
         log.info("[HTTP Invoker] DNS Result: {}", httpInvoker.getName(""));
         log.info("[JAX-WS      ] DNS Result: {}", jaxWs.getName(""));
         log.info("[JMS         ] DNS Result: {}", jmsInvoker.getName(""));
         log.info("[AMQP        ] DNS Result: {}", amqp.getName(""));
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        query();
     }
 
 }
