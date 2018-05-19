@@ -16,8 +16,8 @@ Add more examples
 - [x] HttpInvoker
 - [x] JMS
 - [x] RMI
-- [x] RMI
-- [ ] TODO: rabbitmq
+- [x] JaxWs
+- [x] RabbitMQ
 - [ ] TODO: thrift
 - [ ] TODO: memcached
 - [ ] TODO: redis
