@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {JmsAutoConfiguration.class})
 @Slf4j
-public class SpringBootIntegrationRmiClient implements CommandLineRunner {
+public class SpringBootRemotingClient implements CommandLineRunner {
 
     @Autowired
     @Qualifier(value = "RmiDnsService")
@@ -27,8 +28,12 @@ public class SpringBootIntegrationRmiClient implements CommandLineRunner {
     @Qualifier(value = "JaxWsDnsService")
     DnsService jaxWsDnsService;
 
+    @Autowired
+    @Qualifier(value = "JmsDnsService")
+    DnsService jmsDnsService;
+
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootIntegrationRmiClient.class);
+        SpringApplication.run(SpringBootRemotingClient.class);
     }
 
     @Override
@@ -37,6 +42,7 @@ public class SpringBootIntegrationRmiClient implements CommandLineRunner {
         log.info("[Hessian     ] DNS解析结果: {}", hessianDnsService.getName(""));
         log.info("[HTTP Invoker] DNS解析结果: {}", httpInvokerDnsService.getName(""));
         log.info("[JAX-WS      ] DNS解析结果: {}", jaxWsDnsService.getName(""));
+        log.info("[JMS         ] DNS解析结果: {}", jmsDnsService.getName(""));
     }
 
 }

@@ -1,17 +1,27 @@
 package com.example.remoting;
 
+import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.remoting.JmsInvokerProxyFactoryBean;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 import org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.Queue;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 @Configuration
 public class BeanConfig {
+
+    @Bean
+    Queue queue() {
+        return new ActiveMQQueue("dnsQueryServiceQueue");
+    }
+
     @Bean(name = "RmiDnsService")
     RmiProxyFactoryBean rmiDnsService() {
         RmiProxyFactoryBean factoryBean = new RmiProxyFactoryBean();
@@ -45,6 +55,15 @@ public class BeanConfig {
         factoryBean.setServiceInterface(DnsService.class);
         factoryBean.setNamespaceUri("http://www.example.com/");
 
+        return factoryBean;
+    }
+
+    @Bean(name = "JmsDnsService")
+    JmsInvokerProxyFactoryBean jmxInvokerDnsService(ConnectionFactory connectionFactory, Queue queue) {
+        JmsInvokerProxyFactoryBean factoryBean = new JmsInvokerProxyFactoryBean();
+        factoryBean.setServiceInterface(DnsService.class);
+        factoryBean.setConnectionFactory(connectionFactory);
+        factoryBean.setQueue(queue);
         return factoryBean;
     }
 

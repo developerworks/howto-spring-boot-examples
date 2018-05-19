@@ -11,7 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureWebTestClient
-public class DemoSpringIntegrationApplicationTests {
+public class SpringBootRemotingServerTests {
 
 
     @Autowired

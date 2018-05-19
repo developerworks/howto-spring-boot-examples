@@ -10,16 +10,16 @@ import org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter;
 @Configuration
 public class HttpInvokerConfig {
 
-  @Autowired
-  @Qualifier("DnsServiceHttpInvokerImpl")
-  DnsService dnsService;
+    @Autowired
+    @Qualifier("DnsServiceHttpInvokerImpl")
+    DnsService dnsService;
 
-  @Bean(name = "/HttpInvokerDnsService")
-  HttpInvokerServiceExporter httpInvokerServiceExporter() {
-    HttpInvokerServiceExporter exporter = new HttpInvokerServiceExporter();
-    exporter.setService(dnsService);
-    exporter.setServiceInterface(DnsService.class);
-    return exporter;
-  }
+    @Bean(name = "/HttpInvokerDnsService")
+    HttpInvokerServiceExporter httpInvokerServiceExporter() {
+        HttpInvokerServiceExporter exporter = new HttpInvokerServiceExporter();
+        exporter.setService(dnsService);
+        exporter.setServiceInterface(DnsService.class);
+        return exporter;
+    }
 
 }
