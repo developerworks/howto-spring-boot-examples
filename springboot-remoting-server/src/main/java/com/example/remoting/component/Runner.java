@@ -16,7 +16,7 @@ public class Runner implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    log.info("Sending a email");
+    log.info("Sending an email");
     jmsTemplate.convertAndSend(JmsServerConfig.DNS_QUERY_QUEUE, new Email("info@example.com", "Hello"));
   }
 }
