@@ -1,6 +1,7 @@
 package com.example.springbootwebfluxsecuritydao.config;
 
 import com.example.springbootwebfluxsecuritydao.exception.AuthenticationSuccessHandler;
+import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -99,6 +100,7 @@ public class WebfluxSecurityConfig {
             .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.FIRST)
             .csrf().disable()
             .authorizeExchange()
+            .matchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .pathMatchers("/", "/login", "/logout").permitAll()
             .pathMatchers("/static/**", "/resources/**", "/resources/public/**").permitAll()
             .pathMatchers("/admin/**").hasAuthority("ADMIN")
