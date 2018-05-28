@@ -1,5 +1,6 @@
 package com.example.springbootwebfluxsecuritydao.converter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ResolvableType;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerCodecConfigurer;
@@ -12,6 +13,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collections;
 import java.util.function.Function;
 
+@Slf4j
 public class ServerBodyAuthenticationConverter implements Function<ServerWebExchange, Mono<Authentication>> {
 
     private final ResolvableType usernamePasswordType = ResolvableType.forClass(UsernamePasswordDto.class);
@@ -19,6 +21,8 @@ public class ServerBodyAuthenticationConverter implements Function<ServerWebExch
     private ServerCodecConfigurer serverCodecConfigurer;
 
     public ServerBodyAuthenticationConverter(ServerCodecConfigurer serverCodecConfigurer) {
+        log.info("构造: ServerBodyAuthenticationConverter");
+
         this.serverCodecConfigurer = serverCodecConfigurer;
     }
 

@@ -1,19 +1,19 @@
 package com.example.springbootwebfluxsecuritydao.exception;
 
-import com.example.springbootwebfluxsecuritydao.web.Result;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
  * https://github.com/raphaelDL/spring-webflux-security-jwt/blob/master/src/main/java/io/rapha/spring/reactive/security/auth/WebFilterChainServerJWTAuthenticationSuccessHandler.java
  */
+@Component
 @Slf4j
 public class AuthenticationSuccessHandler implements ServerAuthenticationSuccessHandler {
 
@@ -38,6 +38,6 @@ public class AuthenticationSuccessHandler implements ServerAuthenticationSuccess
 //        } catch (JsonProcessingException e) {
 //            e.printStackTrace();
 //        }
-        return webFilterExchange.getChain().filter(exchange);
+        return Mono.empty();
     }
 }

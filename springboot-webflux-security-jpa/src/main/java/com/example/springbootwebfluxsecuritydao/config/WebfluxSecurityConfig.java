@@ -1,11 +1,13 @@
 package com.example.springbootwebfluxsecuritydao.config;
 
+import com.example.springbootwebfluxsecuritydao.converter.LoginWebFilter;
 import com.example.springbootwebfluxsecuritydao.exception.AuthenticationFailureHandler;
 import com.example.springbootwebfluxsecuritydao.exception.AuthenticationSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -16,7 +18,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
-import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -79,19 +80,39 @@ public class WebfluxSecurityConfig {
      * <p>
      * - Custom Spring WebFlux AuthenticationWebFilter
      * https://gist.github.com/itzg/dc07a711295b4c5c1d1f93322df9634b
+     * <p>
+     * - https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/web/server/authentication/AuthenticationWebFilter.html
+     * <p>
+     * A WebFilter that performs authentication of a particular request. An outline of the logic:
+     * - A request comes in and if it does not match setRequiresAuthenticationMatcher(ServerWebExchangeMatcher),
+     * then this filter does nothing and the WebFilterChain is continued. If it does match then...
+     * <p>
+     * - An attempt to convert the ServerWebExchange into an Authentication is made. If the result is empty,
+     * then the filter does nothing more and the WebFilterChain is continued. If it does create an Authentication...
+     * <p>
+     * - The ReactiveAuthenticationManager specified in AuthenticationWebFilter(ReactiveAuthenticationManager)
+     * is used to perform authentication.
+     * <p>
+     * - If authentication is successful, ServerAuthenticationSuccessHandler is invoked and the authentication is set
+     * on ReactiveSecurityContextHolder, else ServerAuthenticationFailureHandler is invoked
      *
      * @param authenticationManager 认证管理器
      * @return AuthenticationWebFilter 认证过滤器
      */
     @Bean
-    AuthenticationWebFilter authenticationWebFilter(ReactiveAuthenticationManager authenticationManager) {
+    AuthenticationWebFilter authenticationWebFilter(ReactiveAuthenticationManager authenticationManager, ServerCodecConfigurer serverCodecConfigurer) {
 
-        AuthenticationWebFilter filter = new AuthenticationWebFilter(authenticationManager);
-        filter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, "/login"));
-        filter.setAuthenticationSuccessHandler(new AuthenticationSuccessHandler());
-        filter.setAuthenticationFailureHandler(new AuthenticationFailureHandler());
+        LoginWebFilter filter = new LoginWebFilter(authenticationManager, serverCodecConfigurer);
+//        filter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, "/login"));
+//        filter.setAuthenticationSuccessHandler(new AuthenticationSuccessHandler());
+//        filter.setAuthenticationFailureHandler(new AuthenticationFailureHandler());
         return filter;
     }
+
+    @Autowired
+    AuthenticationSuccessHandler authenticationSuccessHandler;
+    @Autowired
+    AuthenticationFailureHandler authenticationFailureHandler;
 
     /**
      * 把认证过滤器添加到过滤器链条中
@@ -106,8 +127,9 @@ public class WebfluxSecurityConfig {
         AuthenticationWebFilter authenticationWebFilter
     ) {
         return http
-            .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .csrf().disable()
+            .httpBasic().disable()
+            .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .authorizeExchange()
             .matchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .pathMatchers("/", "/login", "/logout").permitAll()
@@ -117,6 +139,8 @@ public class WebfluxSecurityConfig {
             .anyExchange()
             .authenticated()
             .and().formLogin()
+//            .authenticationSuccessHandler(authenticationSuccessHandler)
+            .authenticationFailureHandler(authenticationFailureHandler)
             .and().build();
     }
 
