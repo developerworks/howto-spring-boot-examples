@@ -1,9 +1,11 @@
 package com.example.springbootwebfluxsecuritydao.config;
 
+import com.example.springbootwebfluxsecuritydao.exception.AuthenticationFailureHandler;
 import com.example.springbootwebfluxsecuritydao.exception.AuthenticationSuccessHandler;
 import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -73,14 +76,20 @@ public class WebfluxSecurityConfig {
 
     /**
      * 认证过滤器需要使用认证管理器作为参数实例化
+     * <p>
+     * - Custom Spring WebFlux AuthenticationWebFilter
+     * https://gist.github.com/itzg/dc07a711295b4c5c1d1f93322df9634b
      *
      * @param authenticationManager 认证管理器
      * @return AuthenticationWebFilter 认证过滤器
      */
     @Bean
     AuthenticationWebFilter authenticationWebFilter(ReactiveAuthenticationManager authenticationManager) {
+
         AuthenticationWebFilter filter = new AuthenticationWebFilter(authenticationManager);
+        filter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, "/login"));
         filter.setAuthenticationSuccessHandler(new AuthenticationSuccessHandler());
+        filter.setAuthenticationFailureHandler(new AuthenticationFailureHandler());
         return filter;
     }
 
@@ -97,7 +106,7 @@ public class WebfluxSecurityConfig {
         AuthenticationWebFilter authenticationWebFilter
     ) {
         return http
-            .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.FIRST)
+            .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .csrf().disable()
             .authorizeExchange()
             .matchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
